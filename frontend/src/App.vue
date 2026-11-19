@@ -1,7 +1,15 @@
 <script setup>
-import { RouterView } from 'vue-router'
+import { computed } from 'vue'
+import { RouterView, useRoute } from 'vue-router'
+import AppNavbar from '@/components/AppNavbar.vue'
+
+const route = useRoute()
+const showNavbar = computed(() => !route.meta.public)
 </script>
 
 <template>
-  <RouterView />
+  <AppNavbar v-if="showNavbar" />
+  <main class="container-fluid py-4 px-3">
+    <RouterView />
+  </main>
 </template>
