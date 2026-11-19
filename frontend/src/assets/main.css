@@ -1,0 +1,39 @@
+:root {
+  --ivory: #f7f5ef;
+  --green: #173c32;
+  --green-soft: #e8efea;
+  --amber: #d89b3d;
+  --ink: #1d2924;
+  --muted: #64736b;
+  --line: #dfe5df;
+  --radius: 12px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: var(--ivory);
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; background: var(--ivory); color: var(--ink); }
+button, a, input, select, textarea { font: inherit; }
+a { color: var(--green); }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgba(216,155,61,.65); outline-offset: 3px; }
+button, a { cursor: pointer; }
+button { min-height: 44px; }
+.app-shell { min-height: 100vh; }
+.page-content { max-width: 1400px; margin: 0 auto; padding: 2rem clamp(1rem, 3vw, 3rem); }
+.navbar-service { background: var(--green); color: #fff; border-bottom: 3px solid var(--amber); }
+.navbar-service .navbar-brand, .navbar-service .nav-link { color: #fff; }
+.navbar-service .nav-link { min-height: 44px; display: inline-flex; align-items: center; border-radius: 8px; }
+.navbar-service .nav-link:hover, .navbar-service .nav-link.router-link-active { background: rgba(255,255,255,.13); }
+.service-card, .card { border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 5px 18px rgba(23,60,50,.06); background: #fff; }
+.service-card .card-body, .card .card-body { padding: 1.25rem; }
+.btn-primary { --bs-btn-bg: var(--green); --bs-btn-border-color: var(--green); --bs-btn-hover-bg: #0f3027; --bs-btn-hover-border-color: #0f3027; }
+.btn-accent { background: var(--amber); border-color: var(--amber); color: var(--ink); }
+.btn-accent:hover { background: #bd822d; border-color: #bd822d; color: var(--ink); }
+.text-muted, .text-secondary { color: var(--muted) !important; }
+.public-header { background: #fff; border-bottom: 1px solid var(--line); }
+.public-header a { min-height: 44px; display: inline-flex; align-items: center; }
+.login-page { min-height: 100vh; display: grid; place-items: center; padding: 1rem; background: var(--ivory); }
+.login-card { width: min(100%, 420px); }
+.status-panel { padding: 1rem; border-radius: 10px; background: var(--green-soft); }
+@media (max-width: 991px) { .navbar-service .navbar-collapse { padding: .75rem 0; } .navbar-service .nav-link { padding: .65rem .75rem; } .page-content { padding-top: 1.25rem; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }

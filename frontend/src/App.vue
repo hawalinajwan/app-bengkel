@@ -9,7 +9,9 @@ const showNavbar = computed(() => !route.meta.public)
 </script>
 
 <template>
-  <AppNavbar v-if="showNavbar" />
-  <PublicLayout v-if="route.meta.public && route.name !== 'login'"><RouterView /></PublicLayout>
-  <main v-else class="container-fluid py-4 px-3"><RouterView /></main>
+  <div class="app-shell">
+    <AppNavbar v-if="showNavbar" />
+    <PublicLayout v-if="route.meta.public && route.name !== 'login'"><RouterView /></PublicLayout>
+    <main v-else class="page-content"><RouterView /></main>
+  </div>
 </template>
