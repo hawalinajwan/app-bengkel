@@ -19,24 +19,30 @@ async function submit() {
     router.push(route.query.redirect || { name: 'dashboard' })
   } catch (e) {
     error.value = e.response?.data?.message || 'Gagal masuk. Periksa email dan kata sandi.'
-  } finally { loading.value = false }
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
 <template>
-  <div class="login-page">
-    <section class="card login-card" aria-labelledby="login-title">
-      <div class="card-body p-4 p-sm-5">
-        <p class="small fw-semibold text-uppercase text-muted mb-2">Ruang layanan bengkel</p>
-        <h1 id="login-title" class="h3 mb-2">Masuk ke Antrian Bengkel</h1>
-        <p class="text-muted mb-4">Kelola antrian, servis, dan pelanggan dari satu tempat.</p>
-        <div v-if="error" class="alert alert-danger" role="alert">{{ error }}</div>
-        <form @submit.prevent="submit">
-          <div class="mb-3"><label class="form-label" for="email">Email</label><input id="email" v-model="email" type="email" class="form-control" autocomplete="email" required autofocus /></div>
-          <div class="mb-4"><label class="form-label" for="password">Kata sandi</label><input id="password" v-model="password" type="password" class="form-control" autocomplete="current-password" required /></div>
-          <button class="btn btn-primary w-100" type="submit" :disabled="loading">{{ loading ? 'Memeriksa...' : 'Masuk' }}</button>
-        </form>
-      </div>
+  <div class="grid min-h-screen place-items-center bg-ivory px-4 py-8">
+    <section class="service-card w-full max-w-[430px] p-6 sm:p-9" aria-labelledby="login-title">
+      <p class="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">Ruang layanan bengkel</p>
+      <h1 id="login-title" class="mb-2 text-2xl font-bold text-forest">Masuk ke Antrian Bengkel</h1>
+      <p class="mb-6 text-sm leading-6 text-muted">Kelola antrian, servis, dan pelanggan dari satu tempat.</p>
+      <div v-if="error" class="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800" role="alert">{{ error }}</div>
+      <form class="space-y-4" @submit.prevent="submit">
+        <div>
+          <label class="mb-1 block text-sm font-semibold text-ink" for="email">Email</label>
+          <input id="email" v-model="email" class="service-input" type="email" autocomplete="email" required autofocus />
+        </div>
+        <div>
+          <label class="mb-1 block text-sm font-semibold text-ink" for="password">Kata sandi</label>
+          <input id="password" v-model="password" class="service-input" type="password" autocomplete="current-password" required />
+        </div>
+        <button class="service-primary w-full" type="submit" :disabled="loading">{{ loading ? 'Memproses...' : 'Masuk' }}</button>
+      </form>
     </section>
   </div>
 </template>
