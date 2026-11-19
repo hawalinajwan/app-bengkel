@@ -8,12 +8,13 @@ const router = useRouter()
 
 const items = [
   { to: '/', label: 'Dashboard' },
+  { to: '/reports/daily', label: 'Laporan', roles: ['admin'] },
   { to: '/customers', label: 'Pelanggan' },
   { to: '/vehicles', label: 'Kendaraan' },
   { to: '/mechanics', label: 'Mekanik', roles: ['admin'] },
   { to: '/services', label: 'Jasa', roles: ['admin'] },
   { to: '/spareparts', label: 'Sparepart', roles: ['admin'] },
-  { to: '/bookings', label: 'Booking' },
+  { to: '/work-orders', label: 'Antrian' }, { to: '/work-orders/new', label: 'Daftar Order' }, { to: '/bookings', label: 'Booking' },
 ]
 
 const visibleItems = computed(() =>
