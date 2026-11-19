@@ -17,6 +17,36 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/customers',
+      name: 'customers',
+      component: () => import('@/views/Customers.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/vehicles',
+      name: 'vehicles',
+      component: () => import('@/views/Vehicles.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/mechanics',
+      name: 'mechanics',
+      component: () => import('@/views/Mechanics.vue'),
+      meta: { requiresAuth: true, role: 'admin' },
+    },
+    {
+      path: '/services',
+      name: 'services',
+      component: () => import('@/views/Services.vue'),
+      meta: { requiresAuth: true, role: 'admin' },
+    },
+    {
+      path: '/spareparts',
+      name: 'spareparts',
+      component: () => import('@/views/Spareparts.vue'),
+      meta: { requiresAuth: true, role: 'admin' },
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('@/views/NotFound.vue'),
