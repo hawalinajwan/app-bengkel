@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Middleware\RoleMiddleware;
-use App\Exceptions\{InvalidTransitionException, InsufficientStockException, MechanicUnavailableException, PaymentException};
+use App\Exceptions\{InvalidTransitionException, InsufficientStockException, MechanicUnavailableException, PaymentException, SlotFullException};
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
@@ -26,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->render(function (InvalidTransitionException|InsufficientStockException|MechanicUnavailableException|PaymentException $e, Request $request) {
+        $exceptions->render(function (InvalidTransitionException|InsufficientStockException|MechanicUnavailableException|PaymentException|SlotFullException $e, Request $request) {
         if ($request->is('api/*')) return response()->json(['message' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
     });
 

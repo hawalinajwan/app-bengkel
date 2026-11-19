@@ -6,6 +6,9 @@ const router = createRouter({
   routes: [
   { path: '/track', name: 'track', component: () => import('@/views/public/TrackLookup.vue'), meta: { public: true } },
   { path: '/track/:code', name: 'track-detail', component: () => import('@/views/public/TrackDetail.vue'), meta: { public: true } },
+  { path: '/booking', name: 'booking', component: () => import('@/views/public/BookingCreate.vue'), meta: { public: true } },
+  { path: '/booking/:code', name: 'booking-status', component: () => import('@/views/public/BookingStatus.vue'), meta: { public: true } },
+  { path: '/bookings', name: 'bookings', component: () => import('@/views/Bookings.vue'), meta: { requiresAuth: true } },
   { path: '/work-orders/:id/ticket', name: 'ticket', component: () => import('@/views/Ticket.vue'), meta: { requiresAuth: true } },
   { path: '/notifications', name: 'notifications', component: () => import('@/views/Notifications.vue'), meta: { requiresAuth: true } },
     {

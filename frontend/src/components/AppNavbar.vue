@@ -13,6 +13,7 @@ const items = [
   { to: '/mechanics', label: 'Mekanik', roles: ['admin'] },
   { to: '/services', label: 'Jasa', roles: ['admin'] },
   { to: '/spareparts', label: 'Sparepart', roles: ['admin'] },
+  { to: '/bookings', label: 'Booking' },
 ]
 
 const visibleItems = computed(() =>
