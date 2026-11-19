@@ -25,7 +25,7 @@ const fields = [
   <MasterCrud title="Sparepart" endpoint="spareparts" :columns="columns" :fields="fields">
     <template #price="{ row }">{{ rupiah(row.price) }}</template>
     <template #low_stock="{ row }">
-      <span class="badge" :class="row.low_stock ? 'text-bg-danger' : 'text-bg-success'">
+      <span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold" :class="row.low_stock ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'">
         {{ row.low_stock ? 'Menipis' : 'Aman' }}
       </span>
     </template>

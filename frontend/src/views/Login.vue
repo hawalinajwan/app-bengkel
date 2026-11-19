@@ -27,11 +27,11 @@ async function submit() {
 
 <template>
   <div class="grid min-h-screen place-items-center bg-ivory px-4 py-8">
-    <section class="service-card w-full max-w-[430px] p-6 sm:p-9" aria-labelledby="login-title">
-      <p class="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">Ruang layanan bengkel</p>
-      <h1 id="login-title" class="mb-2 text-2xl font-bold text-forest">Masuk ke Antrian Bengkel</h1>
+    <section class="service-service-card w-full max-w-[430px] p-6 sm:p-9" aria-labelledby="login-title">
+      <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">Ruang layanan bengkel</p>
+      <h1 id="login-title" class="mb-3 text-2xl font-bold text-forest">Masuk ke Antrian Bengkel</h1>
       <p class="mb-6 text-sm leading-6 text-muted">Kelola antrian, servis, dan pelanggan dari satu tempat.</p>
-      <div v-if="error" class="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800" role="alert">{{ error }}</div>
+      <div v-if="error" class="mb-6 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800" role="alert">{{ error }}</div>
       <form class="space-y-4" @submit.prevent="submit">
         <div>
           <label class="mb-1 block text-sm font-semibold text-ink" for="email">Email</label>

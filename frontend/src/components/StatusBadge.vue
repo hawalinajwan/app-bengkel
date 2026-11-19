@@ -1,1 +1,1 @@
-<script setup>defineProps({status:{type:String,required:true}})</script><template><span class="badge text-bg-secondary">{{ status }}</span></template>
+<script setup>defineProps({status:{type:String,required:true}})</script><template><span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold bg-gray-100 text-gray-800">{{ status }}</span></template>

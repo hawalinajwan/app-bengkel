@@ -30,7 +30,7 @@ function closeMenu() { open.value = false }
 <template>
   <header class="navbar-service">
     <nav class="navbar navbar-expand-lg" aria-label="Navigasi utama">
-      <div class="container-fluid px-3 px-lg-4">
+      <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-4">
         <RouterLink class="navbar-brand fw-semibold" to="/" @click="closeMenu">Antrian Bengkel</RouterLink>
         <button class="navbar-toggler border-light" type="button" aria-label="Buka menu navigasi" :aria-expanded="open" @click="open = !open">
           <span class="navbar-toggler-icon" />
@@ -41,9 +41,9 @@ function closeMenu() { open.value = false }
               <RouterLink class="nav-link px-3" :to="item.to" @click="closeMenu">{{ item.label }}</RouterLink>
             </li>
           </ul>
-          <div class="d-flex align-items-center gap-3 py-2 py-lg-0">
+          <div class="d-flex align-items-center gap-4 py-2 py-lg-0">
             <span class="small">{{ auth.user?.name }} <span class="opacity-75">({{ auth.user?.role }})</span></span>
-            <button class="btn btn-outline-light" type="button" @click="logout">Keluar</button>
+            <button class="rounded-lg border border-white px-3 py-2 text-white hover:bg-white/10" type="button" @click="logout">Keluar</button>
           </div>
         </div>
       </div>

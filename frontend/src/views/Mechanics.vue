@@ -18,7 +18,7 @@ const fields = [
 <template>
   <MasterCrud title="Mekanik" endpoint="mechanics" :columns="columns" :fields="fields">
     <template #is_active="{ row }">
-      <span class="badge" :class="row.is_active ? 'text-bg-success' : 'text-bg-secondary'">
+      <span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold" :class="row.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
         {{ row.is_active ? 'Aktif' : 'Nonaktif' }}
       </span>
     </template>

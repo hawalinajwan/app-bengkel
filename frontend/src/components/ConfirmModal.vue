@@ -17,15 +17,15 @@ const emit = defineEmits(['confirm', 'cancel'])
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">{{ title }}</h5>
+              <text-lg font-bold text-forest class="modal-title">{{ title }}</text-lg font-bold text-forest>
               <button type="button" class="btn-close" aria-label="Tutup" :disabled="busy" @click="emit('cancel')"></button>
             </div>
             <div class="modal-body">
               <p class="mb-0">{{ message }}</p>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" :disabled="busy" @click="emit('cancel')">Batal</button>
-              <button type="button" class="btn btn-danger" :disabled="busy" @click="emit('confirm')">
+              <button type="button" class="service-muted" :disabled="busy" @click="emit('cancel')">Batal</button>
+              <button type="button" class="service-danger" :disabled="busy" @click="emit('confirm')">
                 {{ busy ? 'Memproses…' : confirmLabel }}
               </button>
             </div>

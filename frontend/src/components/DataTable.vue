@@ -9,21 +9,21 @@ defineProps({
 </script>
 
 <template>
-  <div class="table-responsive">
-    <table class="table table-hover align-middle mb-0">
-      <thead class="table-light">
+  <div class="overflow-x-auto">
+    <service-table class="service-service-table">
+      <thead class="bg-forest-soft">
         <tr>
           <th v-for="col in columns" :key="col.key" scope="col">{{ col.label }}</th>
         </tr>
       </thead>
       <tbody>
         <tr v-if="loading">
-          <td :colspan="columns.length" class="text-center py-4">
+          <td :colspan="columns.length" class="text-center py-6">
             <span class="spinner-border spinner-border-sm me-2"></span>Memuat…
           </td>
         </tr>
         <tr v-else-if="!rows.length">
-          <td :colspan="columns.length" class="text-center text-secondary py-4">{{ empty }}</td>
+          <td :colspan="columns.length" class="text-center text-muted py-6">{{ empty }}</td>
         </tr>
         <tr v-else v-for="row in rows" :key="row[rowKey]">
           <td v-for="col in columns" :key="col.key">
@@ -31,7 +31,7 @@ defineProps({
           </td>
         </tr>
       </tbody>
-    </table>
+    </service-table>
   </div>
   <slot name="footer"></slot>
 </template>

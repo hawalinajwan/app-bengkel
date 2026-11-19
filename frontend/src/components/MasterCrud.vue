@@ -116,32 +116,32 @@ onMounted(load)
 
 <template>
   <div>
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-      <h1 class="h4 mb-0">{{ title }}</h1>
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+      <h1 class="text-2xl font-bold text-forest mb-0">{{ title }}</h1>
       <input
         v-model="search"
         type="search"
-        class="form-control form-control-sm"
+        class="service-input service-input-sm"
         style="max-width: 16rem"
         placeholder="Cari…"
       />
     </div>
 
     <AlertMessage :message="error" />
-    <div v-if="notice" class="alert alert-success py-2">{{ notice }}</div>
+    <div v-if="notice" class="service-success py-2">{{ notice }}</div>
 
-    <div class="card shadow-sm mb-3">
-      <div class="card-body">
-        <h2 class="h6 mb-3">{{ editingId ? 'Ubah data' : 'Tambah data' }}</h2>
-        <form class="row g-3" @submit.prevent="submit">
-          <div v-for="field in fields" :key="field.key" class="col-md-4">
-            <label v-if="field.type !== 'checkbox'" class="form-label" :for="field.key">{{ field.label }}</label>
+    <div class="service-service-card mb-6">
+      <div class="service-card-body">
+        <h2 class="text-base font-bold text-forest mb-6">{{ editingId ? 'Ubah data' : 'Tambah data' }}</h2>
+        <form class="grid gap-4 md:grid-cols-2 lg:grid-cols-4" @submit.prevent="submit">
+          <div v-for="field in fields" :key="field.key" class="min-w-0 md:col-span-1">
+            <label v-if="field.type !== 'checkbox'" class="mb-1 block font-semibold text-ink" :for="field.key">{{ field.label }}</label>
 
             <select
               v-if="field.type === 'select'"
               :id="field.key"
               v-model="form[field.key]"
-              class="form-select"
+              class="service-input"
               :required="field.required"
             >
               <option value="">Pilih {{ field.label }}</option>
@@ -152,7 +152,7 @@ onMounted(load)
               v-else-if="field.type === 'textarea'"
               :id="field.key"
               v-model="form[field.key]"
-              class="form-control"
+              class="service-input"
               :required="field.required"
               rows="2"
             ></textarea>
@@ -167,40 +167,40 @@ onMounted(load)
               :id="field.key"
               v-model="form[field.key]"
               :type="field.type || 'text'"
-              class="form-control"
+              class="service-input"
               :required="field.required"
             />
           </div>
 
-          <div class="col-12 d-flex gap-2">
-            <button class="btn btn-primary" type="submit" :disabled="saving">
+          <div class="min-w-0 flex flex-wrap gap-2">
+            <button class="service-primary" type="submit" :disabled="saving">
               {{ saving ? 'Menyimpan…' : editingId ? 'Simpan perubahan' : 'Tambah' }}
             </button>
-            <button v-if="editingId" class="btn btn-outline-secondary" type="button" @click="resetForm">Batal</button>
+            <button v-if="editingId" class="service-muted" type="button" @click="resetForm">Batal</button>
           </div>
         </form>
       </div>
     </div>
 
-    <div class="card shadow-sm">
+    <div class="service-service-card">
       <DataTable :columns="columns" :rows="rows" :loading="loading">
         <template v-for="col in dataColumns" :key="col.key" #[col.key]="{ row }">
           <slot :name="col.key" :row="row">{{ row[col.key] }}</slot>
         </template>
 
         <template #actions="{ row }">
-          <button class="btn btn-sm btn-outline-primary me-1" type="button" @click="edit(row)">Ubah</button>
-          <button class="btn btn-sm btn-outline-danger" type="button" @click="confirmRow = row">Hapus</button>
+          <button class="min-h-11 rounded-lg border border-line px-3 py-2 text-sm font-semibold hover:bg-forest-soft btn-outline-primary me-1" type="button" @click="edit(row)">Ubah</button>
+          <button class="min-h-11 rounded-lg border border-line px-3 py-2 text-sm font-semibold hover:bg-forest-soft btn-outline-danger" type="button" @click="confirmRow = row">Hapus</button>
         </template>
 
         <template #footer>
           <div v-if="meta" class="d-flex flex-wrap justify-content-between align-items-center gap-2 px-3 py-2 border-top">
-            <span class="small text-secondary">
+            <span class="small text-muted">
               Halaman {{ meta.current_page }} dari {{ meta.last_page }} · {{ meta.total }} data
             </span>
             <div class="btn-group">
               <button
-                class="btn btn-sm btn-outline-secondary"
+                class="min-h-11 rounded-lg border border-line px-3 py-2 text-sm font-semibold hover:bg-forest-soft btn-outline-secondary"
                 type="button"
                 :disabled="meta.current_page <= 1 || loading"
                 @click="page -= 1"
@@ -208,7 +208,7 @@ onMounted(load)
                 Sebelumnya
               </button>
               <button
-                class="btn btn-sm btn-outline-secondary"
+                class="min-h-11 rounded-lg border border-line px-3 py-2 text-sm font-semibold hover:bg-forest-soft btn-outline-secondary"
                 type="button"
                 :disabled="meta.current_page >= meta.last_page || loading"
                 @click="page += 1"

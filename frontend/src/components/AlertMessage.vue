@@ -5,5 +5,5 @@ defineProps({
 </script>
 
 <template>
-  <div v-if="message" class="alert alert-danger py-2" role="alert">{{ message }}</div>
+  <div v-if="message" class="service-alert py-2" role="alert">{{ message }}</div>
 </template>
