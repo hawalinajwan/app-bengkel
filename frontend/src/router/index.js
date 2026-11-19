@@ -4,6 +4,10 @@ import { useAuthStore } from '@/stores/auth'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+  { path: '/track', name: 'track', component: () => import('@/views/public/TrackLookup.vue'), meta: { public: true } },
+  { path: '/track/:code', name: 'track-detail', component: () => import('@/views/public/TrackDetail.vue'), meta: { public: true } },
+  { path: '/work-orders/:id/ticket', name: 'ticket', component: () => import('@/views/Ticket.vue'), meta: { requiresAuth: true } },
+  { path: '/notifications', name: 'notifications', component: () => import('@/views/Notifications.vue'), meta: { requiresAuth: true } },
     {
       path: '/login',
       name: 'login',

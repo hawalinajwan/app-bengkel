@@ -1,0 +1,1 @@
+<script setup>defineProps({items:{type:Array,default:()=>[]}})</script><template><ol><li v-for="item in items" :key="item.at">{{ item.status }} <small>{{ item.at }}</small></li></ol></template>

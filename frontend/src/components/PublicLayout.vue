@@ -1,0 +1,1 @@
+<template><div class="public-layout"><header class="border-bottom p-3"><a href="/track" class="text-decoration-none fw-bold">Bengkel Anda</a></header><main class="container py-4"><slot /></main></div></template>
