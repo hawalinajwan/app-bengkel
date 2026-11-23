@@ -6,14 +6,14 @@ const columns = [
   { key: 'phone', label: 'Telepon' },
   { key: 'email', label: 'Email' },
   { key: 'address', label: 'Alamat' },
-  { key: 'actions', label: 'Aksi' },
+  { key: 'actions', label: 'Aksi' }
 ]
 
 const fields = [
   { key: 'name', label: 'Nama', type: 'text', required: true },
   { key: 'phone', label: 'Telepon', type: 'text' },
   { key: 'email', label: 'Email', type: 'email' },
-  { key: 'address', label: 'Alamat', type: 'textarea' },
+  { key: 'address', label: 'Alamat', type: 'textarea' }
 ]
 </script>
 

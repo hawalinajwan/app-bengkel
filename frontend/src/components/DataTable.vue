@@ -4,13 +4,13 @@ defineProps({
   rows: { type: Array, default: () => [] },
   loading: { type: Boolean, default: false },
   empty: { type: String, default: 'Belum ada data.' },
-  rowKey: { type: String, default: 'id' },
+  rowKey: { type: String, default: 'id' }
 })
 </script>
 
 <template>
   <div class="overflow-x-auto">
-    <service-table class="service-service-table">
+    <table class="service-table">
       <thead class="bg-forest-soft">
         <tr>
           <th v-for="col in columns" :key="col.key" scope="col">{{ col.label }}</th>
@@ -19,11 +19,14 @@ defineProps({
       <tbody>
         <tr v-if="loading">
           <td :colspan="columns.length" class="text-center py-6">
-            <span class="spinner-border spinner-border-sm me-2"></span>Memuat…
+            <span
+              class="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-forest border-t-transparent align-middle"
+            ></span
+            >Memuat…
           </td>
         </tr>
         <tr v-else-if="!rows.length">
-          <td :colspan="columns.length" class="text-center text-muted py-6">{{ empty }}</td>
+          <td :colspan="columns.length" class="py-6 text-center text-muted">{{ empty }}</td>
         </tr>
         <tr v-else v-for="row in rows" :key="row[rowKey]">
           <td v-for="col in columns" :key="col.key">
@@ -31,7 +34,7 @@ defineProps({
           </td>
         </tr>
       </tbody>
-    </service-table>
+    </table>
   </div>
   <slot name="footer"></slot>
 </template>

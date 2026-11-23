@@ -1,1 +1,8 @@
-<script setup>import { onMounted, ref } from 'vue'; import QRCode from 'qrcode'; const props=defineProps({value:{type:String,required:true}}); const src=ref(''); onMounted(()=>QRCode.toDataURL(props.value).then(value=>src.value=value));</script><template><img v-if="src" :src="src" alt="QR pelacakan" width="180" height="180"></template>
+<script setup>
+import { onMounted, ref } from 'vue'
+import QRCode from 'qrcode'
+const props = defineProps({ value: { type: String, required: true } })
+const src = ref('')
+onMounted(() => QRCode.toDataURL(props.value).then((value) => (src.value = value)))
+</script>
+<template><img v-if="src" :src="src" alt="QR pelacakan" width="180" height="180" /></template>

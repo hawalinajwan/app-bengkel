@@ -6,13 +6,13 @@ const columns = [
   { key: 'name', label: 'Nama' },
   { key: 'price', label: 'Harga' },
   { key: 'est_minutes', label: 'Estimasi (menit)' },
-  { key: 'actions', label: 'Aksi' },
+  { key: 'actions', label: 'Aksi' }
 ]
 
 const fields = [
   { key: 'name', label: 'Nama', type: 'text', required: true },
   { key: 'price', label: 'Harga', type: 'number', required: true, default: 0 },
-  { key: 'est_minutes', label: 'Estimasi (menit)', type: 'number', required: true, default: 30 },
+  { key: 'est_minutes', label: 'Estimasi (menit)', type: 'number', required: true, default: 30 }
 ]
 </script>
 

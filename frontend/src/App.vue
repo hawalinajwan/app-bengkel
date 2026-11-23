@@ -9,9 +9,11 @@ const showNavbar = computed(() => !route.meta.public)
 </script>
 
 <template>
-  <div class="app-shell">
+  <div class="min-h-screen">
     <AppNavbar v-if="showNavbar" />
     <PublicLayout v-if="route.meta.public && route.name !== 'login'"><RouterView /></PublicLayout>
-    <main v-else class="page-content"><RouterView /></main>
+    <main v-else class="px-4 py-6" :class="showNavbar ? 'lg:ml-64 lg:px-8' : ''">
+      <RouterView />
+    </main>
   </div>
 </template>

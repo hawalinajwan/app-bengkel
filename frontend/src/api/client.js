@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  headers: { Accept: 'application/json' },
+  headers: { Accept: 'application/json' }
 })
 
 client.interceptors.request.use((config) => {
@@ -19,7 +19,7 @@ client.interceptors.response.use(
       if (window.location.pathname !== '/login') window.location.href = '/login'
     }
     return Promise.reject(error)
-  },
+  }
 )
 
 export default client

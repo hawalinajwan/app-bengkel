@@ -27,21 +27,48 @@ async function submit() {
 
 <template>
   <div class="grid min-h-screen place-items-center bg-ivory px-4 py-8">
-    <section class="service-service-card w-full max-w-[430px] p-6 sm:p-9" aria-labelledby="login-title">
-      <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">Ruang layanan bengkel</p>
+    <section class="service-card w-full max-w-[430px] p-6 sm:p-9" aria-labelledby="login-title">
+      <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">
+        Ruang layanan bengkel
+      </p>
       <h1 id="login-title" class="mb-3 text-2xl font-bold text-forest">Masuk ke Antrian Bengkel</h1>
-      <p class="mb-6 text-sm leading-6 text-muted">Kelola antrian, servis, dan pelanggan dari satu tempat.</p>
-      <div v-if="error" class="mb-6 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800" role="alert">{{ error }}</div>
+      <p class="mb-6 text-sm leading-6 text-muted">
+        Kelola antrian, servis, dan pelanggan dari satu tempat.
+      </p>
+      <div
+        v-if="error"
+        class="mb-6 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"
+        role="alert"
+      >
+        {{ error }}
+      </div>
       <form class="space-y-4" @submit.prevent="submit">
         <div>
           <label class="mb-1 block text-sm font-semibold text-ink" for="email">Email</label>
-          <input id="email" v-model="email" class="service-input" type="email" autocomplete="email" required autofocus />
+          <input
+            id="email"
+            v-model="email"
+            class="service-input"
+            type="email"
+            autocomplete="email"
+            required
+            autofocus
+          />
         </div>
         <div>
           <label class="mb-1 block text-sm font-semibold text-ink" for="password">Kata sandi</label>
-          <input id="password" v-model="password" class="service-input" type="password" autocomplete="current-password" required />
+          <input
+            id="password"
+            v-model="password"
+            class="service-input"
+            type="password"
+            autocomplete="current-password"
+            required
+          />
         </div>
-        <button class="service-primary w-full" type="submit" :disabled="loading">{{ loading ? 'Memproses...' : 'Masuk' }}</button>
+        <button class="service-primary w-full" type="submit" :disabled="loading">
+          {{ loading ? 'Memproses...' : 'Masuk' }}
+        </button>
       </form>
     </section>
   </div>

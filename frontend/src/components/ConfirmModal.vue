@@ -4,7 +4,7 @@ defineProps({
   title: { type: String, default: 'Konfirmasi' },
   message: { type: String, default: '' },
   busy: { type: Boolean, default: false },
-  confirmLabel: { type: String, default: 'Ya' },
+  confirmLabel: { type: String, default: 'Ya' }
 })
 
 const emit = defineEmits(['confirm', 'cancel'])
@@ -13,26 +13,35 @@ const emit = defineEmits(['confirm', 'cancel'])
 <template>
   <Teleport to="body">
     <div v-if="show">
-      <div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <text-lg font-bold text-forest class="modal-title">{{ title }}</text-lg font-bold text-forest>
-              <button type="button" class="btn-close" aria-label="Tutup" :disabled="busy" @click="emit('cancel')"></button>
-            </div>
-            <div class="modal-body">
-              <p class="mb-0">{{ message }}</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="service-muted" :disabled="busy" @click="emit('cancel')">Batal</button>
-              <button type="button" class="service-danger" :disabled="busy" @click="emit('confirm')">
-                {{ busy ? 'Memproses…' : confirmLabel }}
-              </button>
-            </div>
+      <div
+        class="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"
+        role="dialog"
+        aria-modal="true"
+      >
+        <div class="w-full max-w-md rounded-service border border-line bg-white p-6 shadow-lg">
+          <div class="mb-4 flex items-start justify-between gap-4">
+            <h2 class="text-lg font-bold text-forest">{{ title }}</h2>
+            <button
+              type="button"
+              class="text-2xl leading-none text-muted"
+              aria-label="Tutup"
+              :disabled="busy"
+              @click="emit('cancel')"
+            >
+              ×
+            </button>
+          </div>
+          <p class="mb-6 text-sm text-ink">{{ message }}</p>
+          <div class="flex flex-wrap justify-end gap-2">
+            <button type="button" class="service-muted" :disabled="busy" @click="emit('cancel')">
+              Batal
+            </button>
+            <button type="button" class="service-danger" :disabled="busy" @click="emit('confirm')">
+              {{ busy ? 'Memproses…' : confirmLabel }}
+            </button>
           </div>
         </div>
       </div>
-      <div class="modal-backdrop fade show"></div>
     </div>
   </Teleport>
 </template>
