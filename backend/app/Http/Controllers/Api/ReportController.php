@@ -19,6 +19,7 @@ class ReportController extends Controller
             $counts[$status->value] = (clone $query)->where('status', $status->value)->count();
         }
         $revenue = (int) (clone $query)->whereHas('payments')->withSum('payments', 'amount')->get()->sum('payments_sum_amount');
+
         return response()->json(['data' => compact('date', 'counts', 'revenue')]);
     }
 }

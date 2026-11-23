@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('work_orders', function (Blueprint $table): void {
@@ -26,5 +27,9 @@ return new class extends Migration {
             $table->unique(['queue_date', 'queue_number']);
         });
     }
-    public function down(): void { Schema::dropIfExists('work_orders'); }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('work_orders');
+    }
 };
