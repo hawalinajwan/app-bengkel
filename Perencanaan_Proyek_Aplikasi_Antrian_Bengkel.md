@@ -1,8 +1,8 @@
 # Perencanaan Proyek: Aplikasi Antrian Bengkel
 
-*Dokumen spesifikasi untuk AI coding agent. UAS Pemrograman Framework, revisi 19 November 2026: backend Laravel 12, frontend Vue 3, deploy ke Vercel.*
+*Dokumen spesifikasi proyek. UAS Pemrograman Framework, revisi 19 November 2026: backend Laravel 12, frontend Vue 3, deploy ke Vercel.*
 
-## 1. Petunjuk untuk agent
+## 1. Petunjuk pengerjaan
 
 Dokumen ini adalah satu-satunya sumber kebenaran proyek. Baca seluruhnya sebelum menulis kode, lalu kerjakan berurutan sesuai Bagian 12.
 
@@ -629,9 +629,9 @@ Checklist sebelum demo:
 - README, `API.md`, dan `DEMO.md` tersedia.
 - Skenario demo sudah dilatih minimal dua kali.
 
-## 17. Prompt awal untuk agent
+## 17. Ringkasan instruksi pengerjaan
 
-Tempel prompt ini ke agent bersama dokumen:
+Acuan singkat saat mengerjakan proyek:
 
 ```
 Baca dokumen perencanaan sepenuhnya. Bangun monorepo app-bengkel: backend Laravel 12 (hanya API, autentikasi Sanctum) di folder backend/ dan frontend Vue 3 (Vite, Pinia, Vue Router, Axios, qrcode) di folder frontend/, termasuk portal customer publik (pelacakan lewat kode atau QR, notifikasi selesai, dan booking dari jauh hari). Ikuti Bagian 12 fase demi fase, mulai dari Fase 0. Aturan bisnis hanya boleh ada di backend. Setelah tiap fase, jalankan test dan build, ringkas apa yang selesai, lalu lanjut ke fase berikutnya. Catat setiap asumsi di docs/ASUMSI.md. Jangan menambah fitur di luar scope.

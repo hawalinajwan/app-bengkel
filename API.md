@@ -17,11 +17,10 @@ POST /auth/logout
 GET /public/services
 GET /public/booking-slots?date=2026-11-20
 GET /public/track/TRACK234
-POST /public/track/lookup
-{"plate_number":"B001ABC","phone_suffix":"1234"}
 POST /public/bookings
 GET /public/bookings/BKNG2345
-POST /public/bookings/BKNG2345/cancel
+POST /public/bookings/BKNG2345/dp   (multipart: method=transfer|qris, proof)
+POST /public/bookings/BKNG2345/cancel   (ditolak 422 bila DP sudah diverifikasi)
 ```
 
 ## Dashboard dan laporan
@@ -30,7 +29,7 @@ POST /public/bookings/BKNG2345/cancel
 
 ## Master data
 
-`customers`, `vehicles`, `mechanics`, `services`, dan `spareparts` memakai `GET /{resource}`, `GET /{resource}/{id}`, serta endpoint CRUD yang tersedia pada route resource. Contoh: `POST /customers` с `{"name":"Budi","phone":"0812345678"}`.
+`customers`, `vehicles`, `mechanics`, `services`, dan `spareparts` memakai `GET /{resource}`, `GET /{resource}/{id}`, serta endpoint CRUD yang tersedia pada route resource. Contoh: `POST /customers` dengan `{"name":"Budi","phone":"0812345678"}`.
 
 ## Work order
 
@@ -57,6 +56,8 @@ PATCH /work-orders/1/public-note
 
 ## Booking staf
 
-`GET /bookings`, `GET /bookings/{id}`, `POST /bookings/{id}/confirm`, `POST /bookings/{id}/reject` dengan `staff_note`, `POST /bookings/{id}/cancel`, `POST /bookings/{id}/check-in`, dan `POST /bookings/{id}/no-show`.
+`GET /bookings`, `GET /bookings/{id}`, `POST /bookings/{id}/confirm`, `POST /bookings/{id}/reject` dengan `staff_note`, `POST /bookings/{id}/cancel`, `POST /bookings/{id}/check-in`, `POST /bookings/{id}/no-show`, dan `POST /bookings/{id}/dp` dengan `{"method":"transfer|qris"}` (opsional multipart `proof` bila staf perlu mengunggah pengganti). Bukti pelanggan dikirim lewat `POST /public/bookings/{code}/dp` multipart `method=transfer|qris` + `proof` (JPG/PNG/WEBP/PDF maks 4 MB); staf memverifikasi setelah bukti ada. Bukti dibuka lewat `GET /bookings/{id}/dp-proof`. Konfirmasi booking ditolak (422) selama DP belum diverifikasi; DP masuk sebagai pembayaran `dp` saat check-in.
+
+`GET /work-orders/{id}` mengembalikan `services_total` dan `parts_total` selain `total`, sehingga harga jasa dan sparepart dapat ditampilkan terpisah.
 
 Aturan transisi, validasi, status HTTP, dan pembatasan field publik mengikuti `Perencanaan_Proyek_Aplikasi_Antrian_Bengkel.md`.
