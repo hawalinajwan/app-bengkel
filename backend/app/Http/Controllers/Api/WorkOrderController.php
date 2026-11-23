@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\WorkOrderStoreRequest;
 use App\Http\Resources\WorkOrderResource;
 use App\Models\Mechanic;
 use App\Models\Service;
@@ -16,16 +17,30 @@ class WorkOrderController extends Controller
 {
     public function __construct(private readonly WorkOrderService $service) {}
 
-    public function board()
+    public function board(Request $request)
     {
-        $orders = WorkOrder::whereDate('queue_date', today())
+        $data = $request->validate(['date' => 'nullable|date_format:Y-m-d']);
+        $date = $data['date'] ?? today()->toDateString();
+
+        $orders = WorkOrder::whereDate('queue_date', $date)
             ->with(['vehicle', 'mechanic', 'serviceLines.service', 'partLines.sparepart'])
+            ->orderBy('queue_number')
+            ->get();
+
+        $carryOver = WorkOrder::whereDate('queue_date', '<', $date)
+            ->whereIn('status', ['menunggu', 'dikerjakan', 'selesai'])
+            ->with(['vehicle', 'mechanic'])
+            ->orderBy('queue_date')
             ->orderBy('queue_number')
             ->get();
 
         return response()->json([
             'data' => $orders->groupBy(fn ($wo) => $wo->status->value)
                 ->map(fn ($group) => WorkOrderResource::collection($group)),
+            'meta' => [
+                'date' => $date,
+                'carry_over' => WorkOrderResource::collection($carryOver)->resolve(),
+            ],
         ]);
     }
 
@@ -42,16 +57,21 @@ class WorkOrderController extends Controller
         return WorkOrderResource::collection($query->paginate((int) $request->query('per_page', 15)));
     }
 
-    public function store(Request $request)
+    public function store(WorkOrderStoreRequest $request)
     {
-        $data = $request->validate([
-            'vehicle_id' => 'required|exists:vehicles,id',
-            'complaint' => 'required|string',
-        ]);
+        $data = $request->validated();
 
-        return new WorkOrderResource($this->service->register(
-            Vehicle::findOrFail($data['vehicle_id']), $data['complaint'], $request->user()
-        ));
+        if (! empty($data['vehicle_id'])) {
+            $order = $this->service->register(
+                Vehicle::findOrFail($data['vehicle_id']), $data['complaint'], $request->user()
+            );
+        } else {
+            $order = $this->service->registerWalkIn(
+                $data['customer'], $data['vehicle'], $data['complaint'], $request->user()
+            );
+        }
+
+        return new WorkOrderResource($order->load('vehicle.customer'));
     }
 
     public function show(WorkOrder $workOrder)

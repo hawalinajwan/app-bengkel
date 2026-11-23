@@ -19,6 +19,8 @@ class WorkOrderResource extends JsonResource
             'public_note' => $this->public_note,
             'discount' => $this->discount,
             'total' => $this->total,
+            'services_total' => $this->whenLoaded('serviceLines', fn () => (int) $this->serviceLines->sum('price')),
+            'parts_total' => $this->whenLoaded('partLines', fn () => (int) $this->partLines->sum(fn ($line) => $line->price * $line->qty)),
             'started_at' => $this->started_at?->toIso8601String(),
             'finished_at' => $this->finished_at?->toIso8601String(),
             'vehicle' => $this->whenLoaded('vehicle', fn () => [

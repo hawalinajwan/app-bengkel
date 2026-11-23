@@ -7,6 +7,7 @@ use App\Exceptions\InsufficientStockException;
 use App\Exceptions\InvalidTransitionException;
 use App\Exceptions\MechanicUnavailableException;
 use App\Exceptions\PaymentException;
+use App\Models\Customer;
 use App\Models\Mechanic;
 use App\Models\Payment;
 use App\Models\Service;
@@ -53,6 +54,36 @@ class WorkOrderService
                 }
             }
         }
+    }
+
+    /**
+     * Pelanggan yang datang langsung tanpa booking: buat/reuse pelanggan,
+     * daftarkan kendaraannya, lalu masuk antrian hari ini dalam satu transaksi.
+     */
+    public function registerWalkIn(array $customerData, array $vehicleData, string $complaint, User $user): WorkOrder
+    {
+        return DB::transaction(function () use ($customerData, $vehicleData, $complaint, $user) {
+            $phone = filled($customerData['phone'] ?? null) ? trim((string) $customerData['phone']) : null;
+            $customer = $phone ? Customer::where('phone', $phone)->first() : null;
+            if (! $customer) {
+                $customer = Customer::create([
+                    'name' => $customerData['name'],
+                    'phone' => $phone,
+                    'email' => $customerData['email'] ?? null,
+                    'address' => $customerData['address'] ?? null,
+                ]);
+            }
+
+            $vehicle = $customer->vehicles()->create([
+                'plate_number' => strtoupper(preg_replace('/\s+/', '', (string) $vehicleData['plate_number'])),
+                'type' => 'mobil',
+                'brand' => $vehicleData['brand'],
+                'model' => $vehicleData['model'],
+                'year' => $vehicleData['year'] ?? null,
+            ]);
+
+            return $this->register($vehicle, $complaint, $user);
+        });
     }
 
     public function start(WorkOrder $wo, Mechanic $mechanic): WorkOrder
@@ -174,10 +205,11 @@ class WorkOrderService
     {
         return DB::transaction(function () use ($wo, $method, $amount) {
             $wo = $this->locked($wo, S::Selesai);
-            if ($wo->payments()->exists()) {
+            $remaining = max(0, (int) $wo->total - (int) $wo->payments()->sum('amount'));
+            if ($remaining === 0) {
                 throw new PaymentException('Order sudah dibayar.');
             }
-            if ($amount < $wo->total) {
+            if ($amount < $remaining) {
                 throw new PaymentException('Jumlah pembayaran kurang.');
             }
             $payment = $wo->payments()->create(['method' => $method, 'amount' => $amount, 'paid_at' => now()]);

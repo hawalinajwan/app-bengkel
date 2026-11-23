@@ -19,7 +19,9 @@ class NotificationService
             'work_order_id' => $workOrder->id, 'status' => $email ? 'terkirim' : 'dilewati',
             'sent_at' => $email ? now() : null,
         ]);
-        if (! $email) return;
+        if (! $email) {
+            return;
+        }
         try {
             Mail::to($email)->queue(new WorkOrderFinishedMail($workOrder));
         } catch (\Throwable $e) {
@@ -35,7 +37,9 @@ class NotificationService
             'booking_id' => $booking->id, 'status' => $email ? 'terkirim' : 'dilewati',
             'sent_at' => $email ? now() : null,
         ]);
-        if (! $email) return;
+        if (! $email) {
+            return;
+        }
         try {
             Mail::to($email)->queue(new BookingStatusMail($booking, $type));
         } catch (\Throwable $e) {

@@ -13,8 +13,8 @@ class VehicleFactory extends Factory
         return [
             'customer_id' => Customer::factory(),
             'plate_number' => Str::upper(fake()->bothify('? #### ??')),
-            'type' => fake()->randomElement(['motor', 'mobil']),
-            'brand' => fake()->randomElement(['Honda', 'Yamaha', 'Toyota', 'Suzuki', 'Daihatsu']),
+            'type' => 'mobil',
+            'brand' => fake()->randomElement(['Honda', 'Toyota', 'Suzuki', 'Daihatsu', 'Mitsubishi']),
             'model' => Str::upper(fake()->bothify('MODEL-###')),
             'year' => fake()->numberBetween(2005, 2025),
         ];

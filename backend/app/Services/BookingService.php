@@ -11,6 +11,7 @@ use App\Models\Vehicle;
 use App\Models\WorkOrder;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class BookingService
 {
@@ -64,7 +65,11 @@ class BookingService
                 throw new SlotFullException('Slot '.$data['slot_time'].' sudah penuh.');
             }
 
-            return Booking::create($data + ['booking_code' => $this->uniqueCode(), 'status' => 'menunggu']);
+            return Booking::create($data + [
+                'booking_code' => $this->uniqueCode(),
+                'status' => 'menunggu',
+                'dp_amount' => (int) config('bengkel.booking.dp_amount'),
+            ]);
         });
 
         $this->notifications->bookingEvent($booking, 'booking_dibuat');
@@ -74,10 +79,84 @@ class BookingService
 
     public function confirm(Booking $booking, User $user): Booking
     {
-        $booking = DB::transaction(fn () => $this->change($booking, ['menunggu'], 'dikonfirmasi'));
+        $booking = DB::transaction(function () use ($booking) {
+            $booking = $this->locked($booking);
+            if ($booking->status !== 'menunggu') {
+                throw new InvalidTransitionException('Transisi status booking tidak sah.');
+            }
+            if ((int) $booking->dp_amount > 0 && ! $booking->dp_paid_at) {
+                throw new InvalidTransitionException('DP booking belum diterima. Catat DP sebelum konfirmasi.');
+            }
+            $booking->update(['status' => 'dikonfirmasi']);
+
+            return $booking->refresh();
+        });
         $this->notifications->bookingEvent($booking, 'booking_dikonfirmasi');
 
         return $booking;
+    }
+
+    public function submitDpProof(Booking $booking, string $method, string $proofPath): Booking
+    {
+        if (! in_array($method, ['transfer', 'qris'], true)) {
+            throw new InvalidTransitionException('DP hanya bisa dibayar transfer atau QRIS.');
+        }
+
+        $old = $booking->dp_proof_path;
+
+        $booking = DB::transaction(function () use ($booking, $method, $proofPath) {
+            $booking = $this->locked($booking);
+            if (! in_array($booking->status, self::ACTIVE, true)) {
+                throw new InvalidTransitionException('Bukti DP tidak bisa dikirim pada status booking ini.');
+            }
+            if ((int) $booking->dp_amount <= 0) {
+                throw new InvalidTransitionException('Booking ini tidak memakai DP.');
+            }
+            if ($booking->dp_paid_at) {
+                throw new InvalidTransitionException('DP booking sudah diterima.');
+            }
+            $booking->update(['dp_method' => $method, 'dp_proof_path' => $proofPath, 'dp_proof_at' => now()]);
+
+            return $booking->refresh();
+        });
+
+        if ($old && $old !== $proofPath) {
+            Storage::disk('local')->delete($old);
+        }
+
+        return $booking;
+    }
+
+    public function receiveDp(Booking $booking, string $method, ?string $proofPath = null): Booking
+    {
+        if (! in_array($method, ['transfer', 'qris'], true)) {
+            throw new InvalidTransitionException('DP hanya bisa dibayar transfer atau QRIS.');
+        }
+
+        return DB::transaction(function () use ($booking, $method, $proofPath) {
+            $booking = $this->locked($booking);
+            if (! in_array($booking->status, self::ACTIVE, true)) {
+                throw new InvalidTransitionException('DP tidak bisa dicatat pada status booking ini.');
+            }
+            if ((int) $booking->dp_amount <= 0) {
+                throw new InvalidTransitionException('Booking ini tidak memakai DP.');
+            }
+            if ($booking->dp_paid_at) {
+                throw new InvalidTransitionException('DP booking sudah tercatat.');
+            }
+            $proof = $proofPath ?: $booking->dp_proof_path;
+            if (blank($proof)) {
+                throw new InvalidTransitionException('Belum ada bukti transfer dari pelanggan.');
+            }
+            $booking->update([
+                'dp_paid_at' => now(),
+                'dp_method' => $method,
+                'dp_proof_path' => $proof,
+                'dp_proof_at' => $booking->dp_proof_at ?: now(),
+            ]);
+
+            return $booking->refresh();
+        });
     }
 
     public function reject(Booking $booking, User $user, string $note): Booking
@@ -141,6 +220,14 @@ class BookingService
                 $booking->complaint ?: 'Booking '.$booking->booking_code,
                 $user,
             );
+
+            if ($booking->dp_paid_at && (int) $booking->dp_amount > 0) {
+                $workOrder->payments()->create([
+                    'method' => 'dp',
+                    'amount' => (int) $booking->dp_amount,
+                    'paid_at' => $booking->dp_paid_at,
+                ]);
+            }
 
             $booking->update(['status' => 'check_in', 'work_order_id' => $workOrder->id]);
 

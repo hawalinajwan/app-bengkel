@@ -13,7 +13,6 @@ use App\Models\Service;
 use App\Models\Sparepart;
 use App\Models\User;
 use App\Models\Vehicle;
-use App\Models\WorkOrder;
 use App\Services\WorkOrderService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -23,9 +22,13 @@ class WorkOrderTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Vehicle $vehicle;
+
     private Service $service;
+
     private Sparepart $part;
+
     private Mechanic $mechanic;
 
     protected function setUp(): void

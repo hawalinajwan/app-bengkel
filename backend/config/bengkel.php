@@ -10,5 +10,6 @@ return [
         'slot_capacity' => 3,
         'closed_weekdays' => ['Minggu'],
         'max_days_ahead' => 30,
+        'dp_amount' => (int) env('BENGKEL_BOOKING_DP', 50000),
     ],
 ];

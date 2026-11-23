@@ -30,7 +30,7 @@ class VehicleRequest extends FormRequest
                 'required', 'string', 'max:15',
                 Rule::unique('vehicles', 'plate_number')->ignore($this->route('vehicle')),
             ],
-            'type' => ['required', 'in:motor,mobil'],
+            'type' => ['required', 'in:mobil'],
             'brand' => ['required', 'string', 'max:255'],
             'model' => ['required', 'string', 'max:255'],
             'year' => ['nullable', 'integer', 'between:1900,'.(now()->year + 1)],

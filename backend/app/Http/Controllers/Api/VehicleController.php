@@ -51,4 +51,31 @@ class VehicleController extends MasterController
 
         return new VehicleResource($vehicle->load('customer'));
     }
+
+    public function history(string $id)
+    {
+        $vehicle = $this->find($id)->load('customer');
+        $orders = $vehicle->workOrders()
+            ->with(['serviceLines.service', 'partLines.sparepart'])
+            ->latest('queue_date')
+            ->latest('id')
+            ->get();
+
+        return response()->json([
+            'data' => [
+                'vehicle' => new VehicleResource($vehicle),
+                'orders' => $orders->map(fn ($wo) => [
+                    'id' => $wo->id,
+                    'queue_date' => $wo->queue_date?->toDateString(),
+                    'queue_number' => str_pad((string) $wo->queue_number, 3, '0', STR_PAD_LEFT),
+                    'status' => $wo->status->value,
+                    'complaint' => $wo->complaint,
+                    'finished_at' => $wo->finished_at?->toIso8601String(),
+                    'total' => $wo->total,
+                    'services' => $wo->serviceLines->map(fn ($line) => $line->service->name)->values(),
+                    'parts' => $wo->partLines->map(fn ($line) => ['name' => $line->sparepart->name, 'qty' => $line->qty])->values(),
+                ]),
+            ],
+        ]);
+    }
 }

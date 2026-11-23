@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Customer;
-use App\Models\Mechanic;
 use App\Models\Sparepart;
 use App\Models\User;
 use App\Models\Vehicle;
@@ -45,6 +44,20 @@ class MasterDataTest extends TestCase
             ->assertOk();
 
         $this->assertDatabaseMissing('customers', ['id' => $created['id']]);
+    }
+
+    public function test_validation_messages_are_indonesian(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        Sparepart::factory()->create(['sku' => 'SKU-1']);
+
+        $this->actingAs($admin, 'sanctum')
+            ->postJson('/api/spareparts', ['sku' => 'SKU-1'])
+            ->assertStatus(422)
+            ->assertJsonPath('errors.sku.0', 'SKU sudah dipakai.')
+            ->assertJsonPath('errors.name.0', 'nama wajib diisi.')
+            ->assertJsonPath('errors.price.0', 'harga wajib diisi.')
+            ->assertJsonPath('errors.stock.0', 'stok wajib diisi.');
     }
 
     public function test_plate_number_is_normalized(): void
