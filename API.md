@@ -14,14 +14,16 @@ POST /auth/logout
 ## Publik
 
 ```http
-GET /public/services
-GET /public/booking-slots?date=2026-11-20
+GET /public/services                  (id, name, price, est_minutes)
+GET /public/booking-slots?date=2026-11-20   (data slot + meta.dp_amount)
 GET /public/track/TRACK234
 POST /public/bookings
-GET /public/bookings/BKNG2345
+GET /public/bookings/BKNG2345         (termasuk status DP)
 POST /public/bookings/BKNG2345/dp   (multipart: method=transfer|qris, proof)
-POST /public/bookings/BKNG2345/cancel   (ditolak 422 bila DP sudah diverifikasi)
+POST /public/bookings/BKNG2345/cancel   (ditolak 422 bila DP sudah dibayar)
 ```
+
+Tidak ada endpoint pencarian lewat plat nomor. Pelacakan hanya memakai kode atau QR.
 
 ## Dashboard dan laporan
 
@@ -29,15 +31,17 @@ POST /public/bookings/BKNG2345/cancel   (ditolak 422 bila DP sudah diverifikasi)
 
 ## Master data
 
-`customers`, `vehicles`, `mechanics`, `services`, dan `spareparts` memakai `GET /{resource}`, `GET /{resource}/{id}`, serta endpoint CRUD yang tersedia pada route resource. Contoh: `POST /customers` dengan `{"name":"Budi","phone":"0812345678"}`.
+`customers`, `vehicles`, `mechanics`, `services`, dan `spareparts` memakai `GET /{resource}`, `GET /{resource}/{id}`, serta endpoint CRUD yang tersedia pada route resource. Contoh: `POST /customers` dengan `{"name":"Budi","phone":"0812345678"}`. Riwayat servis satu kendaraan: `GET /vehicles/{id}/history`.
 
 ## Work order
 
 ```http
 GET /work-orders
-GET /work-orders/board
+GET /work-orders/board?date=2026-11-24   (meta.carry_over berisi order tanggal sebelumnya)
 POST /work-orders
 {"vehicle_id":1,"complaint":"Ganti oli"}
+POST /work-orders   (walk-in pelanggan baru)
+{"customer":{"name":"Budi","phone":"0812345678"},"vehicle":{"plate_number":"B1234XY","brand":"Toyota","model":"Avanza"},"complaint":"Ganti oli"}
 GET /work-orders/1
 POST /work-orders/1/start
 {"mechanic_id":1}

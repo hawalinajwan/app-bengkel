@@ -30,6 +30,8 @@ npm run dev
 
 `frontend/.env` berisi `VITE_API_URL=http://localhost:8000/api`. Untuk produksi jalankan `npm run build`, hasilnya di `frontend/dist`.
 
+Backend berjalan di `http://127.0.0.1:8000`, frontend di `http://localhost:5173`. Halaman `/` adalah landing publik; panel staf ada di `/dashboard` setelah login. Dev server frontend dikunci ke port 5173 agar origin-nya selalu cocok dengan daftar CORS di backend.
+
 Pengujian:
 
 ```bash
@@ -62,7 +64,6 @@ frontend/
   src/components/             komponen bersama
   src/assets/tailwind.css     token warna dan utilitas
 ```
-
 ## Cara kerja singkat
 
 Kasir membuat order lewat `WorkOrderService`, yang menentukan nomor antrian harian, kode pelacakan, dan log status. Mekanik menambah jasa dan sparepart; stok dikurangi dalam transaksi database dengan penguncian baris. Status order bergerak `menunggu` → `dikerjakan` → `selesai` → `dibayar`, dan setiap perpindahan dicatat di `work_order_status_logs`.
