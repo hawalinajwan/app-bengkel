@@ -521,9 +521,10 @@ Perilaku halaman customer (Bahasa Indonesia, tata letak mobile-first karena seri
 - 9 work order untuk hari ini yang tersebar di semua status: 2 `menunggu`, 3 `dikerjakan`, 1 `selesai`, 2 `dibayar`, dan 1 `batal`. Ditambah 5 order lampau: 3 `dibayar` untuk laporan, 1 order menginap yang masih `dikerjakan` sebagai carry-over, dan 1 `batal`; tanggal antriannya dimundurkan tanpa mengubah `created_at`.
 - Buat order lewat `WorkOrderService`, bukan insert langsung, agar total dan stok konsisten.
 - Karena order dibuat lewat service, `tracking_code` dan status log terbentuk otomatis. Pengecualian demi demo: ubah `tracking_code` satu order `dikerjakan` menjadi `TRACK234` (sesuai alfabet kode pelacakan).
-- Booking dibuat lewat `BookingService` untuk besok: slot 09:00 sengaja terisi tiga booking sehingga penuh (salah satunya memakai `booking_code` `BKNG2345`), slot 10:00 satu `menunggu`, slot 11:00 dua `dikonfirmasi` setelah DP diverifikasi, slot 12:00 satu `dibatalkan`, dan slot 13:00 satu `menunggu`. Setiap booking memakai plat berbeda.
+- Booking dibuat lewat `BookingService` untuk dua hari buka berikutnya (besok dan lusa). Hari pertama: slot 09:00 sengaja terisi tiga booking sehingga penuh (salah satunya memakai `booking_code` `BKNG2345`), slot 10:00 satu `menunggu`, slot 11:00 dua `dikonfirmasi` setelah DP diverifikasi, slot 12:00 satu `dibatalkan`, dan slot 13:00 satu `menunggu`. Hari kedua memakai kode `LUSA2345` dan `LUSA02` sampai `LUSA07` dengan pola serupa, termasuk satu booking yang bukti DP-nya sudah diunggah tetapi belum diverifikasi. Setiap booking memakai plat berbeda.
 - Tiga booking bertanggal hari ini ditambahkan langsung agar demo check-in dan verifikasi DP bisa dilakukan: `HRINI01` sudah `dikonfirmasi` dengan DP transfer, `HRINI03` masih `menunggu` dengan bukti QRIS belum diverifikasi, dan `HRINI02` sudah check-in sehingga ordernya memakai DP sebagai pembayaran awal. Tiga booking lampau (`LEWAT01` tidak hadir, `LEWAT02` dibatalkan, `LEWAT03` dikonfirmasi tetapi tanggalnya sudah lewat) melengkapi filter.
 - Seeder menulis satu bukti transfer contoh (`dp-proofs/demo-transfer.svg`) ke disk privat agar tombol Lihat bukti langsung berfungsi, memanggil `config(['mail.default' => 'log', 'queue.default' => 'sync'])` dan `Mail::fake()` agar tidak ada email nyata yang terkirim, lalu tetap menghasilkan baris `notification_logs`.
+- Setelah seed, database SQLite bisa dibekukan menjadi dump di `database/dumps/` (`sqlite3 database/database.sqlite .dump`). Dump hanya berlaku untuk tanggal pembuatannya; bila demo mundur, jalankan `migrate:fresh --seed` lagi.
 
 ## 11. Pengujian
 
@@ -587,7 +588,7 @@ app-bengkel/
       Services/                  WorkOrderService, BookingService, NotificationService
     bootstrap/app.php            alias middleware, penanganan error JSON
     config/                      bengkel.php, cors.php
-    database/                    migrations, factories, seeders
+    database/                    migrations, factories, seeders, dumps (dump demo)
     resources/views/emails/      template email (satu-satunya Blade)
     routes/api.php
     tests/Feature/

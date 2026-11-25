@@ -267,7 +267,8 @@ SVG);
     private function seedBookings(Collection $services): void
     {
         $bookings = app(BookingService::class);
-        $tomorrow = today()->addDay()->toDateString();
+        $openDays = $this->nextOpenDays(2);
+        $tomorrow = $openDays[0];
 
         $create = fn (int $i, string $slot) => $bookings->create([
             'customer_name' => 'Booking Demo '.$i,
@@ -297,6 +298,7 @@ SVG);
         $bookings->cancel($create(7, '12:00'), $this->kasir);
         $create(8, '13:00');
 
+        $this->seedSecondDayBookings($bookings, $services, $openDays[1]);
         $this->seedTodayBookings($bookings, $services);
 
         // Booking lampau: tidak hadir dan dibatalkan.
@@ -355,6 +357,66 @@ SVG);
 
         // Kode yang mudah diingat untuk demo.
         $full[0]->update(['booking_code' => 'BKNG2345']);
+    }
+
+    /**
+     * Booking untuk hari kedua setelah besok agar demo punya dua tanggal ke depan.
+     */
+    private function seedSecondDayBookings(BookingService $bookings, Collection $services, string $date): void
+    {
+        $create = fn (int $i, string $slot) => $bookings->create([
+            'customer_name' => 'Booking Lusa '.$i,
+            'phone' => '0812345679'.str_pad((string) $i, 2, '0', STR_PAD_LEFT),
+            'email' => $i <= 2 ? 'lusa'.$i.'@bengkel.test' : null,
+            'plate_number' => 'F'.str_pad((string) $i, 3, '0', STR_PAD_LEFT).'LSA',
+            'vehicle_type' => 'mobil',
+            'brand' => 'Honda',
+            'model' => 'Brio',
+            'service_id' => $services[1]->id,
+            'complaint' => 'Booking lusa '.$slot,
+            'booking_date' => $date,
+            'slot_time' => $slot,
+        ]);
+
+        // Slot 09:00 penuh juga di hari kedua.
+        $full = [$create(1, '09:00'), $create(2, '09:00'), $create(3, '09:00')];
+        $full[0]->update(['booking_code' => 'LUSA2345']);
+        $full[1]->update(['booking_code' => 'LUSA02']);
+        $full[2]->update(['booking_code' => 'LUSA03']);
+
+        $create(4, '10:00')->update(['booking_code' => 'LUSA04']);
+
+        $confirmed = $create(5, '11:00');
+        $bookings->receiveDp($confirmed, 'transfer', $this->dpProof);
+        $bookings->confirm($confirmed, $this->kasir);
+        $confirmed->update(['booking_code' => 'LUSA05']);
+
+        // Bukti DP sudah diunggah tetapi belum diverifikasi: latihan verifikasi staf.
+        $waitingProof = $create(6, '12:00');
+        $bookings->submitDpProof($waitingProof, 'qris', $this->dpProof);
+        $waitingProof->update(['booking_code' => 'LUSA06']);
+
+        $bookings->cancel($create(7, '13:00'), $this->kasir)->update(['booking_code' => 'LUSA07']);
+    }
+
+    /**
+     * Tanggal buka berikutnya mulai besok, melewati hari tutup.
+     *
+     * @return list<string>
+     */
+    private function nextOpenDays(int $count): array
+    {
+        $closed = config('bengkel.booking.closed_weekdays', []);
+        $days = [];
+        $cursor = today()->addDay();
+        while (count($days) < $count) {
+            if (! in_array($cursor->locale('id')->dayName, $closed, true)) {
+                $days[] = $cursor->toDateString();
+            }
+            $cursor = $cursor->addDay();
+        }
+
+        return $days;
     }
 
     private function seedTodayBookings(BookingService $bookings, Collection $services): void
