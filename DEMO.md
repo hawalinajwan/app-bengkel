@@ -1,6 +1,6 @@
 # Demo 10 Menit
 
-Persiapan: backend di `http://127.0.0.1:8000` dan frontend di `http://localhost:5173`. Data demo bisa dibuat dengan `php artisan migrate:fresh --seed` atau dipulihkan dari dump `backend/database/dumps/demo-2hari-2026-11-25.sql` (`sqlite3 database/database.sqlite < database/dumps/demo-2hari-2026-11-25.sql`). Seeder mengisi booking untuk hari ini, besok, dan lusa, jadi dua tanggal ke depan sudah punya isi. Login staf memakai `kasir1@bengkel.test` / `password` (admin: `admin@bengkel.test` / `password`).
+Persiapan: backend di `http://127.0.0.1:8000` dan frontend di `http://localhost:5173`. Data demo dibuat dengan `php artisan migrate:fresh --seed` (selalu segar untuk hari ini), atau dipulihkan dari dump `backend/database/dumps/demo-2hari.sql` (`cd backend && sqlite3 database/database.sqlite < database/dumps/demo-2hari.sql`). Seeder mengisi booking untuk hari ini, besok, dan lusa, jadi dua tanggal ke depan sudah punya isi. Login staf memakai `kasir1@bengkel.test` / `password` (admin: `admin@bengkel.test` / `password`).
 
 1. Buka `http://localhost:5173`. Tunjukkan landing publik: daftar layanan, tarif, dan sisa slot besok. Klik **Lacak servis** sebentar, lalu masuk lewat tombol staf dan login sebagai kasir.
 2. Buka papan antrian. Tunjukkan order hari ini beserta nomor antrian dan lima kolom status, lalu bagian carry-over "Masih di bengkel dari tanggal sebelumnya".
@@ -29,5 +29,5 @@ Persiapan: backend di `http://127.0.0.1:8000` dan frontend di `http://localhost:
 - [ ] Check-in membuat order dengan pembayaran DP dan sisa tagihan yang benar.
 - [ ] Slot penuh mengembalikan pesan kesalahan yang jelas, baik untuk besok maupun lusa.
 - [ ] Filter Booking menampilkan data besok dan lusa (`BKNG2345`, `LUSA2345`).
-- [ ] Dump `demo-2hari-2026-11-25.sql` bisa dipulihkan ke database kosong.
+- [ ] Dump `demo-2hari.sql` bisa dipulihkan ke database kosong.
 - [ ] QR pada tiket mengarah ke halaman pelacakan.

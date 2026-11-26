@@ -19,7 +19,7 @@ php artisan serve
 
 Default pengembangan memakai SQLite di `backend/database/database.sqlite`. Isi `DB_*` di `backend/.env` bila ingin memakai MySQL atau PostgreSQL. Email tidak dikirim keluar selama `MAIL_MAILER=log`; isinya tercatat di `storage/logs` dan tabel `notification_logs`.
 
-Seeder mengisi booking untuk hari ini, besok, dan lusa. Bila perlu memulihkan data demo tanpa seed ulang, gunakan dump: `sqlite3 backend/database/database.sqlite < backend/database/dumps/demo-2hari-2026-11-25.sql` (tanggal mengikuti tanggal pembuatan dump).
+Seeder mengisi booking untuk hari ini, besok, dan lusa, sehingga datanya selalu relevan saat dijalankan. Bila perlu memulihkan data demo tanpa seed ulang, gunakan dump: `cd backend && sqlite3 database/database.sqlite < database/dumps/demo-2hari.sql`. Dump memuat tanggal pembuatannya; bila demo mundur, jalankan `php artisan migrate:fresh --seed` lalu buat dump baru dengan `sqlite3 database/database.sqlite .dump`.
 
 Frontend:
 
