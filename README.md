@@ -17,9 +17,15 @@ php artisan migrate:fresh --seed
 php artisan serve
 ```
 
-Default pengembangan memakai SQLite di `backend/database/database.sqlite`. Isi `DB_*` di `backend/.env` bila ingin memakai MySQL atau PostgreSQL. Email tidak dikirim keluar selama `MAIL_MAILER=log`; isinya tercatat di `storage/logs` dan tabel `notification_logs`.
+Pengembangan memakai MySQL dari XAMPP: nyalakan **MySQL** di `manager-osx.app`, buat database `bengkel`, lalu:
 
-Seeder mengisi booking untuk hari ini, besok, dan lusa, sehingga datanya selalu relevan saat dijalankan. Bila perlu memulihkan data demo tanpa seed ulang, gunakan dump: `cd backend && sqlite3 database/database.sqlite < database/dumps/demo-2hari.sql`. Dump memuat tanggal pembuatannya; bila demo mundur, jalankan `php artisan migrate:fresh --seed` lalu buat dump baru dengan `sqlite3 database/database.sqlite .dump`.
+```bash
+mysql -uroot -e "CREATE DATABASE IF NOT EXISTS bengkel CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+```
+
+`backend/.env` sudah diarahkan ke `DB_CONNECTION=mysql`, host `127.0.0.1`, port `3306`, database `bengkel`, user `root` tanpa kata sandi. Lihat isinya lewat phpMyAdmin (`http://localhost/phpmyadmin`, jalankan Apache di XAMPP) atau `mysql -uroot bengkel`. Pengujian otomatis tetap memakai SQLite `:memory:` sesuai `phpunit.xml`, jadi `php artisan test` tidak menyentuh database `bengkel`. Email tidak dikirim keluar selama `MAIL_MAILER=log`; isinya tercatat di `storage/logs` dan tabel `notification_logs`.
+
+Seeder mengisi booking untuk hari ini, besok, dan lusa, sehingga datanya selalu relevan saat dijalankan. Bila perlu memulihkan data demo tanpa seed ulang, gunakan dump MySQL: `cd backend && mysql -uroot bengkel < database/dumps/demo-2hari.sql`. Dump memuat tanggal pembuatannya; bila demo mundur, jalankan `php artisan migrate:fresh --seed` lalu buat dump baru dengan `mysqldump -uroot bengkel > database/dumps/demo-2hari.sql`.
 
 Frontend:
 

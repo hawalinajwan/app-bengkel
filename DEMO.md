@@ -1,6 +1,6 @@
 # Demo 10 Menit
 
-Persiapan: backend di `http://127.0.0.1:8000` dan frontend di `http://localhost:5173`. Data demo dibuat dengan `php artisan migrate:fresh --seed` (selalu segar untuk hari ini), atau dipulihkan dari dump `backend/database/dumps/demo-2hari.sql` (`cd backend && sqlite3 database/database.sqlite < database/dumps/demo-2hari.sql`). Seeder mengisi booking untuk hari ini, besok, dan lusa, jadi dua tanggal ke depan sudah punya isi. Login staf memakai `kasir1@bengkel.test` / `password` (admin: `admin@bengkel.test` / `password`).
+Persiapan: backend di `http://127.0.0.1:8000` dan frontend di `http://localhost:5173`, database MySQL XAMPP (`bengkel`, nyalakan MySQL di `manager-osx.app`). Data demo dibuat dengan `php artisan migrate:fresh --seed` (selalu segar untuk hari ini), atau dipulihkan dari dump `backend/database/dumps/demo-2hari.sql` (`cd backend && mysql -uroot bengkel < database/dumps/demo-2hari.sql`). Seeder mengisi booking untuk hari ini, besok, dan lusa, jadi dua tanggal ke depan sudah punya isi. Login staf memakai `kasir1@bengkel.test` / `password` (admin: `admin@bengkel.test` / `password`).
 
 1. Buka `http://localhost:5173`. Tunjukkan landing publik: daftar layanan, tarif, dan sisa slot besok. Klik **Lacak servis** sebentar, lalu masuk lewat tombol staf dan login sebagai kasir.
 2. Buka papan antrian. Tunjukkan order hari ini beserta nomor antrian dan lima kolom status, lalu bagian carry-over "Masih di bengkel dari tanggal sebelumnya".
@@ -14,7 +14,7 @@ Persiapan: backend di `http://127.0.0.1:8000` dan frontend di `http://localhost:
 10. Buka booking `HRINI01` (hari ini, sudah dikonfirmasi) dan klik **Check-in**. Order baru mendapat nomor antrian dan kode pelacakan, DP tercatat sebagai pembayaran awal, dan detail order menunjukkan sisa tagihan.
 11. Tunjukkan penolakan slot penuh: buat booking ke slot `09:00` besok. Tiga slot itu sudah terisi di data demo, jadi permintaan ditolak dengan pesan yang jelas. Ulangi dengan tanggal lusa (`LUSA2345` dan dua booking lain mengisi `09:00`) untuk menunjukkan aturan kapasitas berlaku di tanggal mana pun.
 12. Buka menu Booking dengan filter tanggal lusa. Tunjukkan `LUSA05` (sudah dikonfirmasi dengan DP) dan `LUSA06` (bukti QRIS sudah diunggah, belum diverifikasi) sebagai bahan latihan verifikasi staf.
-13. Jelaskan arsitektur singkat: Vue, Vue Router, Pinia, Axios, dan Tailwind di depan; Laravel dengan Sanctum, service bisnis, dan transaksi database di belakang; SQLite untuk pengembangan; endpoint publik tanpa login memakai resource terbatas.
+13. Jelaskan arsitektur singkat: Vue, Vue Router, Pinia, Axios, dan Tailwind di depan; Laravel dengan Sanctum, service bisnis, dan transaksi database di belakang; MySQL XAMPP untuk pengembangan; endpoint publik tanpa login memakai resource terbatas.
 
 ## Checklist
 

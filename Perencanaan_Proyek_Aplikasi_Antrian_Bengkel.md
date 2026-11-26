@@ -59,7 +59,7 @@ Arsitektur:
 
 Backend:
 
-- Laravel 12, PHP 8.2 ke atas. SQLite dipakai untuk pengembangan, pengujian, dan demo. MySQL atau PostgreSQL didukung dengan mengubah `DB_*` di `backend/.env`.
+- Laravel 12, PHP 8.2 ke atas. Pengembangan dan demo memakai MySQL dari XAMPP (MariaDB 10.4) dengan database `bengkel`; SQLite tetap dipakai untuk pengujian otomatis (`:memory:` lewat `phpunit.xml`). PostgreSQL didukung dengan mengubah `DB_*` di `backend/.env`.
 - Autentikasi token memakai Laravel Sanctum (`php artisan install:api`) dengan Bearer token. Token dipilih karena frontend dan backend berada di domain berbeda, sehingga autentikasi cookie sulit. Middleware `role:admin` berasal dari `RoleMiddleware` yang didaftarkan sebagai alias di `bootstrap/app.php`.
 - Validasi di FormRequest. Respons memakai API Resource.
 - Semua error di `api/*` berformat JSON: 401 belum login, 403 salah role, 404 tidak ditemukan, 422 validasi atau pelanggaran aturan bisnis, 429 terlalu banyak permintaan (throttle). Body error berbentuk `{ message, errors? }` (`errors` hanya untuk validasi). Atur lewat `withExceptions` di `bootstrap/app.php`.
@@ -370,7 +370,7 @@ public function addPart(WorkOrder $wo, Sparepart $part, int $qty): WorkOrder
 }
 ```
 
-Catatan: `lockForUpdate()` tidak berpengaruh di SQLite, tetapi transaksi dan rollback tetap bekerja. Uji perilaku penguncian hanya relevan di MySQL.
+catatan: `lockForUpdate()` berefek di MySQL (dipakai saat pengembangan), tetapi tidak berefek di SQLite yang dipakai pengujian otomatis. Transaksi dan rollback bekerja di keduanya.
 
 Pola pelunasan setelah DP:
 
@@ -524,11 +524,11 @@ Perilaku halaman customer (Bahasa Indonesia, tata letak mobile-first karena seri
 - Booking dibuat lewat `BookingService` untuk dua hari buka berikutnya (besok dan lusa). Hari pertama: slot 09:00 sengaja terisi tiga booking sehingga penuh (salah satunya memakai `booking_code` `BKNG2345`), slot 10:00 satu `menunggu`, slot 11:00 dua `dikonfirmasi` setelah DP diverifikasi, slot 12:00 satu `dibatalkan`, dan slot 13:00 satu `menunggu`. Hari kedua memakai kode `LUSA2345` dan `LUSA02` sampai `LUSA07` dengan pola serupa, termasuk satu booking yang bukti DP-nya sudah diunggah tetapi belum diverifikasi. Setiap booking memakai plat berbeda.
 - Tiga booking bertanggal hari ini ditambahkan langsung agar demo check-in dan verifikasi DP bisa dilakukan: `HRINI01` sudah `dikonfirmasi` dengan DP transfer, `HRINI03` masih `menunggu` dengan bukti QRIS belum diverifikasi, dan `HRINI02` sudah check-in sehingga ordernya memakai DP sebagai pembayaran awal. Tiga booking lampau (`LEWAT01` tidak hadir, `LEWAT02` dibatalkan, `LEWAT03` dikonfirmasi tetapi tanggalnya sudah lewat) melengkapi filter.
 - Seeder menulis satu bukti transfer contoh (`dp-proofs/demo-transfer.svg`) ke disk privat agar tombol Lihat bukti langsung berfungsi, memanggil `config(['mail.default' => 'log', 'queue.default' => 'sync'])` dan `Mail::fake()` agar tidak ada email nyata yang terkirim, lalu tetap menghasilkan baris `notification_logs`.
-- Setelah seed, database SQLite bisa dibekukan menjadi dump di `database/dumps/` (`sqlite3 database/database.sqlite .dump`). Dump hanya berlaku untuk tanggal pembuatannya; bila demo mundur, jalankan `migrate:fresh --seed` lagi.
+- Setelah seed, database bisa dibekukan menjadi dump. Untuk MySQL XAMPP: `mysqldump -uroot bengkel > database/dumps/demo-2hari.sql`. Dump hanya berlaku untuk tanggal pembuatannya; bila demo mundur, jalankan `migrate:fresh --seed` lagi.
 
 ## 11. Pengujian
 
-PHPUnit feature test dengan `RefreshDatabase` (SQLite in-memory). Saat ini 49 test (233 assertion) lulus lewat `php artisan test`. Cakupan wajib:
+PHPUnit feature test dengan `RefreshDatabase` (SQLite in-memory lewat `phpunit.xml`, jadi test tidak memakai database `bengkel`). Saat ini 49 test (233 assertion) lulus lewat `php artisan test`. Cakupan wajib:
 
 1. Nomor antrian bertambah per hari dan kembali ke 1 di hari baru.
 2. Kendaraan dengan order aktif ditolak.
@@ -655,7 +655,7 @@ Durasi sekitar 10 menit. Demo dijalankan lokal: backend `http://127.0.0.1:8000`,
 9. Tunjukkan penolakan sebelum DP: pada booking `HRINI03` (hari ini, status `Menunggu`, bukti QRIS belum diverifikasi), klik Konfirmasi. Muncul pesan bahwa DP belum diterima. Verifikasi DP-nya, lalu konfirmasi.
 10. Buka booking `HRINI01` (hari ini, sudah dikonfirmasi) dan klik Check-in. Order baru mendapat nomor antrian dan kode pelacakan, DP tercatat sebagai pembayaran awal, dan detail order menunjukkan sisa tagihan.
 11. Tunjukkan penolakan slot penuh: buat booking ke slot `09:00` besok. Tiga slot itu sudah terisi di data demo, jadi permintaan ditolak dengan pesan yang jelas.
-12. Jelaskan arsitektur singkat: Vue, Vue Router, Pinia, Axios, dan Tailwind di depan; Laravel dengan Sanctum, service bisnis, dan transaksi database di belakang; SQLite untuk pengembangan; endpoint publik tanpa login memakai resource terbatas.
+13. Jelaskan arsitektur singkat: Vue, Vue Router, Pinia, Axios, dan Tailwind di depan; Laravel dengan Sanctum, service bisnis, dan transaksi database di belakang; MySQL XAMPP untuk pengembangan; endpoint publik tanpa login memakai resource terbatas.
 
 Hindari:
 

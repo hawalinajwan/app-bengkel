@@ -5,7 +5,7 @@ Hal yang tidak diatur eksplisit di `Perencanaan_Proyek_Aplikasi_Antrian_Bengkel.
 ## Teknis
 
 - Laravel dipin ke `^12.0`. Saat pengerjaan, `composer create-project` menghasilkan Laravel 13, sedangkan Bagian 4 mensyaratkan 12.
-- SQLite dipakai untuk pengembangan dan pengujian (`DB_CONNECTION=sqlite`). MySQL/PostgreSQL baru dipakai bila demo memerlukannya.
+- Pengembangan dan demo memakai MySQL XAMPP (MariaDB 10.4, database `bengkel`, user `root` tanpa kata sandi) karena itu yang tersedia di mesin ini. Pengujian otomatis tetap SQLite `:memory:` lewat `phpunit.xml` (`DB_CONNECTION=sqlite`) agar cepat dan tidak menyentuh data demo.
 - `booking.closed_weekdays` berisi nama hari Bahasa Indonesia (`['Minggu']`) karena `APP_LOCALE=id`, dan `BookingService` membandingkannya lewat `Carbon::translatedFormat('l')`.
 - Zona waktu ditulis langsung `Asia/Jakarta` di `config/app.php` karena Laravel 12 tidak membaca timezone dari env.
 - `frontend/.env` tidak ikut git. Nilai awalnya ada di `.env.example` (`VITE_API_URL=http://localhost:8000/api`).
